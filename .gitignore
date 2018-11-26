@@ -6,6 +6,7 @@
 /tmp
 /out-tsc
 desc.txt
+/target
 
 # dependencies
 /node_modules
