@@ -1,0 +1,142 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>GTTA-Parent</groupId>
+    <artifactId>GTTA-Parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>GTTA-EAR</artifactId>
+  <packaging>ear</packaging>
+  <build>
+  <plugins>
+
+
+
+    <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.4.1</version>
+        <executions>
+            <execution>
+                <id>copy-resources</id>
+                <phase>validate</phase>
+                <goals>
+                    <goal>copy-resources</goal>
+                </goals>
+                <configuration>
+                    <overwrite>true</overwrite>
+                    <outputDirectory>${project.parent.basedir}/GTTA-Web/src/main/webapp/</outputDirectory>
+                    <resources>
+                        <resource>
+                            <directory>${project.parent.basedir}/GTTA-Web/src/main/websrc/dist/</directory>
+                        </resource>
+                    </resources>
+                </configuration>
+            </execution>
+        </executions>
+    </plugin>
+
+  <!--  Maven grovy plug-in to create current time stamp and apppend to blild file names -->
+  <!-- This plugin can be moved to parent project to avail time stamp to all modules  -->
+  <plugin>
+  		<groupId>org.codehaus.gmaven</groupId>
+  		<artifactId>gmaven-plugin</artifactId>
+ 		 <version>1.4</version>
+  		<executions>
+    			<execution>
+     			 	<id>set-custom-property</id>
+      				<phase>initialize</phase>
+     				 <goals>
+       						 <goal>execute</goal>
+      				</goals>
+     				 <configuration>
+      						<providerSelection>1.8</providerSelection>
+        						<source>
+          						def timestamp = new Date().format('yyyy-MM-dd-HH-mm-ss')
+          						project.properties.setProperty('timestamp', timestamp)
+        						</source>
+      				 </configuration>
+    			</execution>
+    			<execution><!-- for demonstration purpose -->
+     			<id>show-custom-property</id>
+      			<phase>generate-resources</phase>
+      			<goals>
+        				<goal>execute</goal>
+     			 </goals>
+    				  <!-- Print current time stamp in build console -->
+      			<configuration>
+      				<providerSelection>1.8</providerSelection>
+      			    <source>
+          				println project.properties['timestamp']
+        				</source>
+     			 </configuration>
+    			</execution>
+  	</executions>
+</plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-ear-plugin</artifactId>
+        <version>2.10</version>
+        <configuration>
+        <!--  skinny type added for remove duplicates in war lib folder -->
+        <!-- http://maven.apache.org/plugins/maven-war-plugin/examples/skinny-wars.html -->
+        <defaultLibBundleDir>lib/</defaultLibBundleDir>
+         <skinnyWars>true</skinnyWars>
+           <modules>
+             <webModule>
+               <groupId>GTTA-Web</groupId>
+               <artifactId>GTTA-Web</artifactId>
+  
+               <!-- Application Context root information -->
+               <uri>GTTA-Web.war</uri>
+               <!-- <contextRoot>licensePortal</contextRoot> -->
+               <contextRoot>/services/sales-essentials/gtta</contextRoot>
+             </webModule>
+             
+          </modules>
+        </configuration>
+      </plugin>
+    </plugins>
+    <finalName>GTTA-EAR</finalName>
+    <pluginManagement>
+    		<plugins>
+    			<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+    			<plugin>
+    				<groupId>org.eclipse.m2e</groupId>
+    				<artifactId>lifecycle-mapping</artifactId>
+    				<version>1.0.0</version>
+    				<configuration>
+    					<lifecycleMappingMetadata>
+    					<pluginExecutions>
+    						<pluginExecution>
+    							<pluginExecutionFilter>
+    								<groupId>
+    									org.codehaus.gmaven
+    								</groupId>
+    								<artifactId>
+    									gmaven-plugin
+    								</artifactId>
+    								<versionRange>[1.3,)</versionRange>
+    								<goals>
+    									<goal>execute</goal>
+    								</goals>
+    							</pluginExecutionFilter>
+    							<action>
+    								<ignore></ignore>
+    							</action>
+    						</pluginExecution>
+    					</pluginExecutions>
+    				</lifecycleMappingMetadata>
+    			</configuration>
+    		</plugin>
+    	</plugins>
+    </pluginManagement>
+  </build>
+  <dependencies>
+  	<dependency>
+  		<groupId>GTTA-Web</groupId>
+  		<artifactId>GTTA-Web</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  		<type>war</type>
+  	</dependency>
+  </dependencies>
+</project>
