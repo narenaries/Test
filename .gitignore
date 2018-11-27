@@ -8,7 +8,6 @@
 desc.txt
 /target
 /misc/target
-info.txt
 
 # dependencies
 /node_modules
